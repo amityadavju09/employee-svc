@@ -35,8 +35,8 @@ jobs:
         run: docker build -f Dockerfile.postgres -t amityadavju09/postgres-custom:15 .
 
       # Run containers with docker-compose (service + postgres)
-      - name: Start containers
-        run: docker compose up --build -d
+      #- name: Start containers
+      #  run: docker compose up --build -d
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
