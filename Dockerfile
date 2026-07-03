@@ -6,10 +6,10 @@ WORKDIR /app
 
 # Copy the built JAR file into the container
 # For Maven:
-COPY target/*.jar app.jar
+COPY target/*.jar employee-service.jar
 
 # Inform Docker that the container listens on port 8080
 EXPOSE 8080
 
 # Command to execute the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "employee-service.jar", "--spring.profiles.active=docker"]
