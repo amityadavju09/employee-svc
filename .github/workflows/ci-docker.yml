@@ -27,4 +27,4 @@ jobs:
       #  run: mvn test --file pom.xml
 
       - name: Build Docker image
-        run: docker-compose up --build -d
+        run: docker compose up --build -d
