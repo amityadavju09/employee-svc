@@ -26,8 +26,13 @@ jobs:
       #- name: Run tests
       #  run: mvn test --file pom.xml
 
-      - name: Build Docker image
+      # Build employee-svc image
+      - name: Build employee-svc Docker image
         run: docker build -t amityadavju09/employee-svc:latest .
+
+      # Build postgres-custom image
+      - name: Build postgres-custom image
+        run: docker build -f Dockerfile.postgres -t amityadavju09/postgres-custom:15 .
 
       # Run containers with docker-compose (service + postgres)
       - name: Start containers
@@ -41,3 +46,6 @@ jobs:
 
       - name: Push Docker image
         run: docker push amityadavju09/employee-svc:latest
+
+      - name: Push postgres-custom image
+        run: docker push amityadavju09/postgres-custom:15

@@ -1,6 +1,9 @@
 services:
   postgres:
-    image: postgres:15
+    # To run the local build use
+    #image: postgres:15
+    # To run the image pushed to docker hub use below code
+    image: amityadavju09/postgres-custom:15
     container_name: postgres_container
     restart: always
     environment:
