@@ -8,9 +8,6 @@ WORKDIR /app
 # For Maven:
 COPY target/*.jar app.jar
 
-# For Gradle (Uncomment below and comment out the Maven line if using Gradle):
-# COPY build/libs/*.jar app.jar
-
 # Inform Docker that the container listens on port 8080
 EXPOSE 8080
 
