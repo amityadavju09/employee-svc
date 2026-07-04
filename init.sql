@@ -7,13 +7,12 @@ CREATE SEQUENCE IF NOT EXISTS employee.emp_employee_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1
-    OWNED BY employee.emp.employee_id;
+    CACHE 1;
 
 -- Create table
 CREATE TABLE IF NOT EXISTS employee.emp
 (
-    employee_id BIGINT NOT NULL DEFAULT nextval('employee.emp_employee_id_seq'::regclass),
+    employee_id BIGINT NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
@@ -26,20 +25,8 @@ CREATE TABLE IF NOT EXISTS employee.emp
 
 ALTER TABLE IF EXISTS employee.emp OWNER TO postgres;
 
--- Trigger function for auto-updating updated_at
-CREATE OR REPLACE FUNCTION employee.update_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Attach trigger to table
-CREATE TRIGGER set_timestamp
-    BEFORE UPDATE ON employee.emp
-    FOR EACH ROW
-    EXECUTE FUNCTION employee.update_timestamp();
+ALTER TABLE employee.emp
+    ALTE COLUMN employee_id SET DEFAULT nextval('employee.emp_employee_id_seq');
 
 -- Optional: Add indexes for faster lookups
 CREATE INDEX IF NOT EXISTS idx_emp_last_name ON employee.emp(last_name);
