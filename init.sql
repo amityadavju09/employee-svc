@@ -1,6 +1,15 @@
 -- Create schema
 CREATE SCHEMA IF NOT EXISTS employee AUTHORIZATION postgres;
 
+-- Create sequence for employee_id
+CREATE SEQUENCE IF NOT EXISTS employee.emp_employee_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+    OWNED BY employee.emp.employee_id;
+
 -- Create table
 CREATE TABLE IF NOT EXISTS employee.emp
 (
@@ -16,3 +25,22 @@ CREATE TABLE IF NOT EXISTS employee.emp
     );
 
 ALTER TABLE IF EXISTS employee.emp OWNER TO postgres;
+
+-- Trigger function for auto-updating updated_at
+CREATE OR REPLACE FUNCTION employee.update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Attach trigger to table
+CREATE TRIGGER set_timestamp
+    BEFORE UPDATE ON employee.emp
+    FOR EACH ROW
+    EXECUTE FUNCTION employee.update_timestamp();
+
+-- Optional: Add indexes for faster lookups
+CREATE INDEX IF NOT EXISTS idx_emp_last_name ON employee.emp(last_name);
+CREATE INDEX IF NOT EXISTS idx_emp_phone_number ON employee.emp(phone_number);
