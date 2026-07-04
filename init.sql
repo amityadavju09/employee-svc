@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS employee.emp
 ALTER TABLE IF EXISTS employee.emp OWNER TO postgres;
 
 ALTER TABLE employee.emp
-    ALTE COLUMN employee_id SET DEFAULT nextval('employee.emp_employee_id_seq');
+    ALTER COLUMN employee_id SET DEFAULT nextval('employee.emp_employee_id_seq');
 
 -- Optional: Add indexes for faster lookups
 CREATE INDEX IF NOT EXISTS idx_emp_last_name ON employee.emp(last_name);
