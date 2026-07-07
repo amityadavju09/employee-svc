@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-db
+  template:
+    metadata:
+      labels:
+        app: employee-db
+    spec:
+      containers:
+        - name: employee-db
+          image: 366486935206.dkr.ecr.us-east-1.amazonaws.com/employee-db:latest
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secret
+            - configMapRef:
+                name: postgres-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee-db-service
+spec:
+  selector:
+    app: employee-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
