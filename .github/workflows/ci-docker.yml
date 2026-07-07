@@ -32,7 +32,7 @@ jobs:
 
       # Build postgres-custom image
       - name: Build postgres-custom image
-        run: docker build -f Dockerfile.postgres -t amityadavju09/postgres-custom:15 .
+        run: docker build -f postgres/Dockerfile.postgres -t amityadavju09/postgres-custom:15 .
 
       # Run containers with docker-compose (service + postgres)
       #- name: Start containers

@@ -28,7 +28,7 @@ jobs:
 
       # Build employee-db image
       - name: Build employee-db Docker image
-        run: docker build -f Dockerfile.postgres -t 366486935206.dkr.ecr.us-east-1.amazonaws.com/employee-db:latest .
+        run: docker build -f postgres/Dockerfile.postgres -t 366486935206.dkr.ecr.us-east-1.amazonaws.com/employee-db:latest .
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
