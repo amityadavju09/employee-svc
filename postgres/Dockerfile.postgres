@@ -7,6 +7,3 @@ ENV POSTGRES_DB=company_db
 
 # Copy initialization scripts (SQL or shell) into the container
 COPY init.sql /docker-entrypoint-initdb.d/
-
-# Optional: custom config
-# COPY custom-postgresql.conf /etc/postgresql/postgresql.conf

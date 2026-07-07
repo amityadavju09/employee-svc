@@ -1,0 +1,22 @@
+{
+  "family": "employee-svc",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "employee-svc",
+      "image": "366486935206.dkr.ecr.us-east-1.amazonaws.com/employee-svc:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8080, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "SPRING_DATASOURCE_URL", "value": "jdbc:postgresql://employee-db:5432/company_db" },
+        { "name": "SPRING_DATASOURCE_USERNAME", "value": "postgres" },
+        { "name": "SPRING_DATASOURCE_PASSWORD", "value": "postgres" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push employee-svc
+        run: |
+          docker build -t employee-svc ./employee-svc
+          docker tag employee-svc:latest ${{ steps.login-ecr.outputs.registry }}/employee-svc:latest
+          docker push ${{ steps.login-ecr.outputs.registry }}/employee-svc:latest
+
+      - name: Build, tag, and push employee-db
+        run: |
+          docker build -f ./postgres/Dockerfile.postgres -t employee-db ./postgres
+          docker tag employee-db:latest ${{ steps.login-ecr.outputs.registry }}/employee-db:latest
+          docker push ${{ steps.login-ecr.outputs.registry }}/employee-db:latest
+
+      - name: Register ECS task definitions
+        run: |
+          aws ecs register-task-definition --cli-input-json file://ecs/employee-db-task.json
+          aws ecs register-task-definition --cli-input-json file://ecs/employee-svc-task.json
+
+      - name: Deploy ECS services
+        run: |
+          aws ecs update-service --cluster employee-cluster --service employee-db --force-new-deployment
+          aws ecs update-service --cluster employee-cluster --service employee-svc --force-new-deployment
