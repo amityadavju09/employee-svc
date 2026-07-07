@@ -1,0 +1,19 @@
+{
+  "cluster": "employee-cluster",
+  "serviceName": "employee-db",
+  "taskDefinition": "employee-db",
+  "desiredCount": 1,
+  "launchType": "FARGATE",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": [
+        "subnet-08d673341691139eb",
+        "subnet-0f0bcb35abe78cf10"
+      ],
+      "securityGroups": [
+        "sg-08f0bf92c9c6bc2e4"
+      ],
+      "assignPublicIp": "ENABLED"
+    }
+  }
+}

@@ -40,7 +40,17 @@ jobs:
           aws ecs register-task-definition --cli-input-json file://ecs/employee-db-task.json
           aws ecs register-task-definition --cli-input-json file://ecs/employee-svc-task.json
 
-      - name: Deploy ECS services
+      - name: Create or update ECS services
         run: |
-          aws ecs update-service --cluster employee-cluster --service employee-db --force-new-deployment
-          aws ecs update-service --cluster employee-cluster --service employee-svc --force-new-deployment
+          if ! aws ecs describe-services --cluster employee-cluster --services employee-db --query "services[0].status" --output text 2>/dev/null; then
+            aws ecs create-service --cli-input-json file://ecs/employee-db-service.json
+          else
+            aws ecs update-service --cluster employee-cluster --service employee-db --force-new-deployment
+          fi
+
+          if ! aws ecs describe-services --cluster employee-cluster --services employee-svc --query "services[0].status" --output text 2>/dev/null; then
+            aws ecs create-service --cli-input-json file://ecs/employee-svc-service.json
+          else
+            aws ecs update-service --cluster employee-cluster --service employee-svc --force-new-deployment
+          fi
+      
